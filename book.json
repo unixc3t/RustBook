@@ -1,4 +1,7 @@
 {
+    "structure":{
+        "readme":"README.md"
+    },
 	"title":"The Rust Book",
 	"links": {
 	        "home": "https://github.com/unixc3t/RustBook",
