@@ -1,5 +1,5 @@
-[2.I基础部分][basics]
-[basics]: basics.md "基础部分"
+[2.I基础部分](README.md)
+
 
 ###安装Rust
 
