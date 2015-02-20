@@ -1,10 +1,14 @@
 # Summary
 
 
-* [1.引言](README.md)
-* [2.I基础](basics/README.md)
-   * [2.1.安装Rust](basics/install_rust.md)
+* [引言][readme]
 
+[readme]: README.md
+* [基础](basics/README.md)
+   * [安装Rust](basics/install_rust.md)
+   * [你好，世界][hw]
+
+   [hw]: basics/helloWorld.md
 
 
 	
