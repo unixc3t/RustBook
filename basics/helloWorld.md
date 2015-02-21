@@ -100,7 +100,7 @@ window下
 
 [Hello,Cargo!][ca]
 
-[ca]:http://doc.rust-lang.org/book/hello-cargo.html
+[ca]: hello_Cargo.md
 
 
 
