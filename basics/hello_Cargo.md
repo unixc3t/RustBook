@@ -35,8 +35,8 @@ cargo认为你的代码在一个叫src目录的文件夹里，顶级目录放一
 注意要文件名字正确，需要使用大写的C
 
 写入如下代码
-	[package]
 
+	[package]
 	name = "hello_world"
 	version = "0.0.1"
 	authors = [ "Your name <you@example.com>" ]
