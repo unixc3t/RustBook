@@ -84,7 +84,7 @@ TOML类似于ini文件，但是有一些好的扩展。
 
 [变量绑定][vb]
 
-[vb]: http://doc.rust-lang.org/book/variable-bindings.html
+[vb]: variable_binding.md
     
     
     
