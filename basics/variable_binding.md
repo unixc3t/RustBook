@@ -111,7 +111,7 @@ Rust不允许你使用了一个没初始化的变量，下面我们好好谈论�
 
 [If][if]
 
-[if]: http://doc.rust-lang.org/book/if.html
+[if]: if.md
 
 
 
