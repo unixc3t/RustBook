@@ -8,6 +8,7 @@
    * [你好,Cargo](basics/hello_Cargo.md)
    * [变量绑定](basics/variable_binding.md)
    * [If](basics/if.md)
+   * [函数](basics/fun.md)
 
  
 

@@ -97,7 +97,7 @@ Rust中第二种语句就是表达式语句，它的作用就是将表达式变�
 
 [函数][fun]
 
-[fun]: http://doc.rust-lang.org/book/functions.html
+[fun]: fun.md
 
 
 
