@@ -9,6 +9,7 @@
    * [变量绑定](basics/variable_binding.md)
    * [If](basics/if.md)
    * [函数](basics/fun.md)
+   * [注释](basics/comments.md)
 
  
 
