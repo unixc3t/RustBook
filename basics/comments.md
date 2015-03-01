@@ -42,4 +42,4 @@ Rust有两种注释，行注释和文档注释。
     
 [复合数据类型][compound]
 
-[compound]: http://doc.rust-lang.org/book/compound-data-types.html
+[compound]: compound.md
