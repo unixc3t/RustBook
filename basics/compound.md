@@ -221,7 +221,37 @@ integer_length
         }
     }
      
- 未完。。。待续。。
+
+这个 :: 符号用来指明一个命名空间,在这个例子中,Ordering位于std模块的子模块cmp中，指南的后面我们会详细学习模块，现在，你需要知道你所能够使用use从标准库导入你需要的东西.
+
+让我们讨论一下例子中的代码，cmp是一个比较两个数的函数。返回一个Ordering类型,如果a小于b 我们返回Ordering::Less, 如果a大于b Ordering::Greater, 或者两个数相等 Ordering::Equal,注意。枚举的每个变量都在枚举命名空间后面，是 Ordering::Greater 不是 Greater.
+
+ordering变量的类型是Ordering，值是三个值的其中一个，我们使用一组if/else语句来对比是哪个值。
+
+Ordering::Greater太长了，我们使用枚举体来替代，如下
+
+    use std::cmp::Ordering::{self, Equal, Less, Greater};
+
+    fn cmp(a: i32, b: i32) -> Ordering {
+        if a < b { Less }
+        else if a > b { Greater }
+        else { Equal }
+    }
+    
+    fn main() {
+        let x = 5;
+        let y = 10;
+    
+        let ordering = cmp(x, y); // ordering: Ordering
+    
+        if ordering == Less { println!("less"); }
+        else if ordering == Greater { println!("greater"); }
+        else if ordering == Equal { println!("equal"); }
+    }
+    
+使用变体形式更简洁，但是容易引起命名冲突，这么做的时候要谨慎，如果导入的变量很少这个是一个好的风格.
+
+如你所看到的。枚举是一种很强大的数据表现形式,当他们是泛型跨类型时候甚至更有用，尽管我们还没有学习泛型，让我们来学习怎么使用它们来进行模式匹配，让我们可以以一种优雅的方式来析构聚合类型(枚举的理论术语)而避免使用看起来可读性差的**if/else语句**
  
  [match]: match.md
     
