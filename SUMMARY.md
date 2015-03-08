@@ -13,7 +13,7 @@
    * [复合数据类型](basics/compound.md)
    * [匹配](basics/match.md)
    * [循环](basics/loop.md)
-
+   * [字符串](basics/string.md)
  
 
 
