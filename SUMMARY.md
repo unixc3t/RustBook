@@ -14,7 +14,7 @@
    * [匹配](basics/match.md)
    * [循环](basics/loop.md)
    * [字符串](basics/string.md)
-   * [数组,向量,切片] (avs.md)
+   * [数组,向量,切片](basics/avs.md)
  
 
 
