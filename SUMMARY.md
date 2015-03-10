@@ -15,6 +15,7 @@
    * [循环](basics/loop.md)
    * [字符串](basics/string.md)
    * [数组,向量,切片](basics/avs.md)
+   * [标准输入](basics/sinput.md)
  
 
 
