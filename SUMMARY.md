@@ -16,6 +16,7 @@
    * [字符串](basics/string.md)
    * [数组,向量,切片](basics/avs.md)
    * [标准输入](basics/sinput.md)
+   * [猜谜游戏](basics/game.md)
  
 
 
