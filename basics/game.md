@@ -307,27 +307,197 @@ fn cmp(a: i32, b: i32) -> Ordering {
     hello
     You guessed: hello
     
-你注意到了我们可以运行我们的程序及时它编译错误了。可以运行是因为上一个编译版本还在。要小心这点！
+你注意到了我们仍可以运行我们的程序即使它编译错误了。可以运行是因为上一个编译版本还在。要小心这点！
 
 我们得到一个String类型，但是我们需要u32类型。我们该怎么做？有一个函数可以做到:
 
     let input = old_io::stdin().read_line()
                            .ok()
-                       .expect("Failed to read line");
+                           .expect("Failed to read line");
     let input_num: Result<u32, _> = input.parse();
     
+**parse**函数将一个&str类型转换成其他值。我们使用类型提示告诉它应该转换成什么类型。记得我们给**random()**的类型提示。是这个的样子:
+    
+    rand::random::<u32>();
+    
+还有另一种类型提示方式,使用let进行声明:
+    
+    let x: u32 = rand::random();
+
+在上面代码上,我们显示的声明x是u32类型，所以Rust能够正确的告诉**random()**生成哪种类型。下面是两种方式的代码:
+
+    let input_num_option = "5".parse::<u32>().ok(); // input_num: Option<u32>
+    let input_num_result: Result<u32, _> = "5".parse(); // input_num: Result<u32, <u32 as FromStr>::Err>
+    
+上面代码,我们将转换parse方法返回的结果，同时调用ok()方法。总之，转换我们的输入为一个数字类型值。我们的代码像这样:
+
+    
+    use std::old_io;
+    use std::rand;
+    use std::cmp::Ordering;
+    
+    fn main() {
+        println!("Guess the number!");
+    
+        let secret_number = (rand::random::<u32>() % 100) + 1;
+    
+        println!("The secret number is: {}", secret_number);
+    
+        println!("Please input your guess.");
+    
+        let input = old_io::stdin().read_line()
+                               .ok()
+                               .expect("Failed to read line");
+        let input_num: Result<u32, _> = input.parse();
+    
+        println!("You guessed: {:?}", input_num);
+    
+        match cmp(input_num, secret_number) {
+            Ordering::Less => println!("Too small!"),
+            Ordering::Greater => println!("Too big!"),
+            Ordering::Equal => println!("You win!"),
+        }
+    }
+    
+    fn cmp(a: u32, b: u32) -> Ordering {
+        if a < b { Ordering::Less }
+        else if a > b { Ordering::Greater }
+        else { Ordering::Equal }
+    }
+   
+编译测试:
+    
+    $ cargo build
+       Compiling guessing_game v0.0.1 (file:///home/you/projects/guessing_game)
+    src/main.rs:21:15: 21:24 error: mismatched types: expected `u32`, found `core::result::Result<u32, core::num::ParseIntError>` (expected u32, found enum `core::result::Result`) [E0308]
+    src/main.rs:21     match cmp(input_num, secret_number) {
+                                 ^~~~~~~~~
+    error: aborting due to previous error
+    
+
+input\_num是Result<u32, <some error>>类型，而不是u32类型.我们需要解析Result。如果你还记得，match做这个再合适不过了。
 
 
+    use std::old_io;
+    use std::rand;
+    use std::cmp::Ordering;
+    
+    fn main() {
+        println!("Guess the number!");
+    
+        let secret_number = (rand::random::<u32>() % 100) + 1;
+    
+        println!("The secret number is: {}", secret_number);
+    
+        println!("Please input your guess.");
+    
+        let input = old_io::stdin().read_line()
+                               .ok()
+                               .expect("Failed to read line");
+        let input_num: Result<u32, _> = input.parse();
+    
+        let num = match input_num {
+            Ok(n) => n,
+            Err(_) => {
+                println!("Please input a number!");
+                return;
+            }
+        };
+    
+    
+        println!("You guessed: {}", num);
+    
+        match cmp(num, secret_number) {
+            Ordering::Less => println!("Too small!"),
+            Ordering::Greater => println!("Too big!"),
+            Ordering::Equal => println!("You win!"),
+        }
+    }
+    
+    fn cmp(a: u32, b: u32) -> Ordering {
+        if a < b { Ordering::Less }
+        else if a > b { Ordering::Greater }
+        else { Ordering::Equal }
+    }
+   
+我们使用match来匹配Reust里面的u32类型的值，如果有就返回，没有就打印错误信息。 让我们试试这回:
 
+    $ cargo run
+       Compiling guessing_game v0.0.1 (file:///home/you/projects/guessing_game)
+         Running `target/guessing_game`
+    Guess the number!
+    The secret number is: 17
+    Please input your guess.
+    5
+    Please input a number!
+    
+我们做到了!
 
+    事实上没有，当我们得到来自**stdin()**一行输入的时候，我们得到了全部输入。包括你输入回车时的\n字符，**parse()**方法看到字符串"5\n"时，会认为这不是一个数字,没有数字被输入。幸运的是。&str有一个简单的方法我们可以使用:trim().一个小改动，我们的代码:
+    
+    use std::old_io;
+    use std::rand;
+    use std::cmp::Ordering;
+    
+    fn main() {
+        println!("Guess the number!");
+    
+        let secret_number = (rand::random::<u32>() % 100) + 1;
+    
+        println!("The secret number is: {}", secret_number);
+    
+        println!("Please input your guess.");
+    
+        let input = old_io::stdin().read_line()
+                               .ok()
+                               .expect("Failed to read line");
+        let input_num: Result<u32, _> = input.trim().parse();
+    
+        let num = match input_num {
+            Ok(num) => num,
+            Err(_) => {
+                println!("Please input a number!");
+                return;
+            }
+        };
+    
+    
+        println!("You guessed: {}", num);
+    
+        match cmp(num, secret_number) {
+            Ordering::Less => println!("Too small!"),
+            Ordering::Greater => println!("Too big!"),
+            Ordering::Equal => println!("You win!"),
+        }
+    }
+    
+    fn cmp(a: u32, b: u32) -> Ordering {
+        if a < b { Ordering::Less }
+        else if a > b { Ordering::Greater }
+        else { Ordering::Equal }
+    }
+        
+        
+编译测试：
 
+    $ cargo run
+       Compiling guessing_game v0.0.1 (file:///home/you/projects/guessing_game)
+         Running `target/guessing_game`
+    Guess the number!
+    The secret number is: 58
+    Please input your guess.
+      76
+    You guessed: 76
+    Too big!
 
+漂亮!你能看到虽然我们输入猜测数字后又加了空格，它仍然猜出来我输入的76.多运行程序几次，验证猜谜程序运行是否良好,和打印猜测数太小的情况
 
+Rust的编译器在这帮了我们。这个技术叫做"依靠编译器",当代码工作的时候这个很有用。让错误信息帮助我们修正代码。
 
+现在我们已经完成了程序的大部分，但是我们只能猜一次。让我们加入循环
 
-
-
-
+#循环
+未完待续。。。。
 
 
 
