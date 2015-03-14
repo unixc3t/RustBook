@@ -2,7 +2,7 @@
 
 
 * [引言](README.md)
-* [基础](basics/README.md)
+* [初级](basics/README.md)
    * [安装Rust](basics/install_rust.md)
    * [你好,世界](basics/helloWorld.md)
    * [你好,Cargo](basics/hello_Cargo.md)
@@ -17,7 +17,8 @@
    * [数组,向量,切片](basics/avs.md)
    * [标准输入](basics/sinput.md)
    * [猜谜游戏](basics/game.md)
- 
+* [中级]
+   * [Crates and Modules]
 
 
 	

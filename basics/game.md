@@ -497,22 +497,253 @@ Rust的编译器在这帮了我们。这个技术叫做"依靠编译器",当代�
 现在我们已经完成了程序的大部分，但是我们只能猜一次。让我们加入循环
 
 #循环
-未完待续。。。。
 
+就像我们前面说的，一个**loop**可以让我们使用无限循环。让我们加入代码里:
+    use std::old_io;
+    use std::rand;
+    use std::cmp::Ordering;
+    
+    fn main() {
+        println!("Guess the number!");
+    
+        let secret_number = (rand::random::<u32>() % 100) + 1;
+    
+        println!("The secret number is: {}", secret_number);
 
+        loop {
+    
+            println!("Please input your guess.");
+    
+            let input = old_io::stdin().read_line()
+                                   .ok()
+                                   .expect("Failed to read line");
+            let input_num: Result<u32, _> = input.trim().parse();
+        
+            let num = match input_num {
+                    Ok(num) => num,
+                    Err(_) => {
+                        println!("Please input a number!");
+                        return;
+                }
+            };
+    
+    
+            println!("You guessed: {}", num);
+    
+            match cmp(num, secret_number) {
+                Ordering::Less => println!("Too small!"),
+                Ordering::Greater => println!("Too big!"),
+                Ordering::Equal => println!("You win!"),
+            }
+        }
+    }
+    
+    fn cmp(a: u32, b: u32) -> Ordering {
+        if a < b { Ordering::Less }
+        else if a > b { Ordering::Greater }
+        else { Ordering::Equal }
+    }
+        
+测试一下。等等，难道不是加入一个loop循环就行了？记得那个return?如果我们输入一个非数字。我们就会退出。像这样
+    
+    $ cargo run
+       Compiling guessing_game v0.0.1 (file:///home/you/projects/guessing_game)
+         Running `target/guessing_game`
+    Guess the number!
+    The secret number is: 59
+    Please input your guess.
+    45
+    You guessed: 45
+    Too small!
+    Please input your guess.
+    60
+    You guessed: 60
+    Too big!
+    Please input your guess.
+    59
+    You guessed: 59
+    You win!
+    Please input your guess.
+    quit
+    Please input a number!
 
+哈，**quit**就是退出。就像没输入任何数字一样,至少说这样还可以，让我实现赢得比赛就退出:
 
+    use std::old_io;
+    use std::rand;
+    use std::cmp::Ordering;
+    
+    fn main() {
+        println!("Guess the number!");
+    
+        let secret_number = (rand::random::<u32>() % 100) + 1;
+    
+        println!("The secret number is: {}", secret_number);
+    
+        loop {
+    
+            println!("Please input your guess.");
+    
+            let input = old_io::stdin().read_line()
+                                   .ok()
+                                   .expect("Failed to read line");
+            let input_num: Result<u32, _> = input.trim().parse();
+    
+            let num = match input_num {
+                Ok(num) => num,
+                Err(_) => {
+                    println!("Please input a number!");
+                    return;
+                    }
+            };
+    
+    
+            println!("You guessed: {}", num);
+    
+            match cmp(num, secret_number) {
+                Ordering::Less => println!("Too small!"),
+                Ordering::Greater => println!("Too big!"),
+                Ordering::Equal => {
+                    println!("You win!");
+                    return;
+                },
+            }
+        }
+    }
+    
+    fn cmp(a: u32, b: u32) -> Ordering {
+        if a < b { Ordering::Less }
+        else if a > b { Ordering::Greater }
+        else { Ordering::Equal }
+    }
+    
+在打印"You win"语句后面加入return语句。当我们猜对了就退出程序。我们在调整一下，如果输入的不是数字，我们不退出，我们忽略它，将return改为continue：
+    
+    use std::old_io;
+    use std::rand;
+    use std::cmp::Ordering;
+    
+    fn main() {
+        println!("Guess the number!");
+    
+        let secret_number = (rand::random::<u32>() % 100) + 1;
+    
+        println!("The secret number is: {}", secret_number);
+    
+        loop {
+    
+            println!("Please input your guess.");
+    
+            let input = old_io::stdin().read_line()
+                                   .ok()
+                                   .expect("Failed to read line");
+            let input_num: Result<u32, _> = input.trim().parse();
+    
+            let num = match input_num {
+                Ok(num) => num,
+                Err(_) => {
+                    println!("Please input a number!");
+                    continue;
+                }
+            };
+    
+    
+            println!("You guessed: {}", num);
+    
+            match cmp(num, secret_number) {
+                Ordering::Less => println!("Too small!"),
+                Ordering::Greater => println!("Too big!"),
+            Ordering::Equal => {
+                    println!("You win!");
+                    return;
+                },
+            }
+        }
+    }
+    
+    fn cmp(a: u32, b: u32) -> Ordering {
+        if a < b { Ordering::Less }
+        else if a > b { Ordering::Greater }
+        else { Ordering::Equal }
+    }
+    
+现在没问题了，让我们测试一下
 
+    $ cargo run
+       Compiling guessing_game v0.0.1 (file:///home/you/projects/guessing_game)
+         Running `target/guessing_game`
+    Guess the number!
+    The secret number is: 61
+    Please input your guess.
+    10
+    You guessed: 10
+    Too small!
+    Please input your guess.
+    99
+    You guessed: 99
+    Too big!
+    Please input your guess.
+    foo
+    Please input a number!
+    Please input your guess.
+    61
+    You guessed: 61
+    You win!
+   
+棒极了! 伴随最后一点小改动。我们完成了猜谜游戏。你想想还有什么需要改进？哦,对了。我们不应该打印出被猜的数字。对于测试很好，但是程序来说就没用了，下面是我们最终源码:
 
-
-
-
-
-
-
-
-
-
+    use std::old_io;
+    use std::rand;
+    use std::cmp::Ordering;
+    
+    fn main() {
+        println!("Guess the number!");
+    
+        let secret_number = (rand::random::<u32>() % 100) + 1;
+    
+        loop {
+    
+            println!("Please input your guess.");
+    
+            let input = old_io::stdin().read_line()
+                                   .ok()
+                                   .expect("Failed to read line");
+            let input_num: Result<u32, _> = input.trim().parse();
+    
+            let num = match input_num {
+                Ok(num) => num,
+                Err(_) => {
+                    println!("Please input a number!");
+                    continue;
+                }
+            };
+    
+    
+            println!("You guessed: {}", num);
+    
+            match cmp(num, secret_number) {
+                Ordering::Less => println!("Too small!"),
+                Ordering::Greater => println!("Too big!"),
+                Ordering::Equal => {
+                    println!("You win!");
+                    return;
+                },
+            }
+        }
+    }
+       
+    fn cmp(a: u32, b: u32) -> Ordering {
+        if a < b { Ordering::Less }
+        else if a > b { Ordering::Greater }
+        else { Ordering::Equal }
+    }
+    
+#大功告成
+ - - -
+ 此时，你已经成功了完成了猜谜游戏。祝贺你！
+ 
+ 你已经学会了Rust的基本语法。这些和你以前在其他语言里用过的十分相似。这些基本语法和语义元素将会是其他Rust语法知识的基础。
+ 现在你已经是一个基础知识的专家了。是时候，去学习一些Rust的高级独特的特性
 
 
 
