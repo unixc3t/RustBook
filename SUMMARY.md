@@ -17,8 +17,5 @@
    * [数组,向量,切片](basics/avs.md)
    * [标准输入](basics/sinput.md)
    * [猜谜游戏](basics/game.md)
-* [中级]
-   * [Crates and Modules]
-
-
-	
+* [中级](middle/README.md)
+   * [Crates and Modules](middle/crates_modules.md)
