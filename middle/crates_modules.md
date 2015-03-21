@@ -104,3 +104,124 @@ greetings
 
 libphrase-hash.rlib就是编译后的crate，在我们了解如何使用这个crate之前，
 先让我们把它拆分为多个文件。
+
+
+#多文件crates
+
+- - -
+
+如果每个crate仅仅是一个文件,这些文件将会变得很大，分割crate到多个文件很简单。Rust有两中方法支持这么做
+
+
+除了这样定义一个模块外:
+
+    mod english {
+        // contents of our module go here
+    }
+
+还可以使用下面方式定义:
+
+    mod english;
+
+如我们这么做了,Rust希望找到一个english.rs文件或者english/mod.rs这种结构的文件，里面包含了
+我们的模块内容.
+
+    // contents of our module go here
+
+注意这些文件，你不需要重新声明这些模块。他们已经在开始的mod处理好了。
+
+
+使用这两种技术，我们可以将我们的crate拆分为两个目录和七个文件：
+
+
+    $ tree .
+    .
+    ├── Cargo.lock
+    ├── Cargo.toml
+    ├── src
+    │   ├── english
+    │   │   ├── farewells.rs
+    │   │   ├── greetings.rs
+    │   │   └── mod.rs
+    │   ├── japanese
+    │   │   ├── farewells.rs
+    │   │   ├── greetings.rs
+    │   │   └── mod.rs
+    │   └── lib.rs
+    └── target
+    ├── deps
+    ├── libphrases-a7448e02a0468eaa.rlib
+    └── native
+
+
+src/lib.rs是我们的根crate，里面内容
+
+    // in src/lib.rs
+
+    mod english;
+
+    mod japanese;
+
+这两句声明告诉Rust查看src/english.rs 和 src/japanese.rs或者
+src/english/mod.rs 和 src/japanese/mod.rs.在这个例子中，因为我们的模块有子模块，所以我们选择第二种.src/english/mod.rs 和 src/japanese/mod.rs ,看起来像这样
+
+    // both src/english/mod.rs and src/japanese/mod.rs
+
+    mod greetings;
+
+    mod farewells;
+    
+这两句声明语句，会告诉Rust查看 src/english/greetings.rs 和 src/japanese/greetings.rs 或者 src/english/farewells/mod.rs 和 src/japanese/farewells/mod.rs.因为这两个子模块没有他们的子模块，
+所以我们选择这种 src/english/greetings.rs 和 src/japanese/farewells.rs. 
+
+src/english/greetings.rs 和 src/japanese/farewells.rs的内容都是空的，让我们加入一些函数
+
+src/english/greetings.rs:
+
+    // in src/english/greetings.rs
+
+    fn hello() -> String {
+        "Hello!".to_string()
+    } 
+    
+    
+src/english/farewells.rs:
+
+    // in src/english/farewells.rs
+    
+    fn goodbye() -> String {
+        "Goodbye.".to_string()
+    }
+ 
+
+src/japanese/greetings.rs:
+
+    // in src/japanese/greetings.rs
+
+    fn hello() -> String {
+        "こんにちは".to_string()
+    }
+    
+
+你可以拷贝粘贴页面上的代码,或者自己写一些类似的代码.知道"konnichiwa"是什麽意思,对于学习module来说不重要
+
+
+src/japanese/farewells.rs:
+
+    // in src/japanese/farewells.rs
+
+    fn goodbye() -> String {
+        "さようなら".to_string()
+    }
+    
+在我们的crate里已经有了函数了,让我们在其他的crate里使用这个
+
+
+
+
+
+
+
+
+
+
