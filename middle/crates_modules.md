@@ -440,14 +440,15 @@ self是什么，默认情况下，use声明表示绝对路径，从你的根crat
 **use super:: ** 引用你当前位置的上一级，一些人喜欢把self当作**.**，super 当作**..**,像许多shell显示当前目录和父目录那样
 
 
-没有使用use，表示路径是相对的，foo::bar() 引用了foo内部函数，foo的位置相对于我们所在位置，如果前缀加上了::,::foo::bar(),它引用了一个不同的foo,一个相对于你的根crate的路径。
+use另一种用法，表示路径是相对的:，foo::bar() 引用了foo内部函数，foo的位置相对于我们所在位置，如果前缀加上了::,::foo::bar(),它引用了一个不同的foo,一个相对于你的根crate的路径。
 
 我们编译运行:
+
        $ cargo run
        Compiling phrases v0.0.1 (file:///home/you/projects/phrases)
          Running `target/phrases`
-    Hello in English: Hello!
-    Goodbye in English: Goodbye.
-    Hello in Japanese: こんにちは
-    Goodbye in Japanese: さようなら 
+        Hello in English: Hello!
+        Goodbye in English: Goodbye.
+        Hello in Japanese: こんにちは
+        Goodbye in Japanese: さようなら 
     
