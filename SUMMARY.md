@@ -19,3 +19,4 @@
    * [猜谜游戏](basics/game.md)
 * [中级](middle/README.md)
    * [Crates and Modules](middle/crates_modules.md)
+   * [测试](middle/test.md)

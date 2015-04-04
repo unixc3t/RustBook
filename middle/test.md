@@ -163,13 +163,63 @@ shuld_panic测试是脆弱的，，它很难保证一个未知原因导致的失
     
 这时一个非常普通的使用assert_eq!的例子，调用函数传入已知的参数和预期的输出做比较
     
+#The test module
+- - -
+我们的例子的测试方式并不是习惯用法。它缺少测试模块， 下面的写法是惯用法:
 
+    pub fn add_two(a: i32) -> i32 {
+        a + 2
+    }
+    
+    #[cfg(test)]
+    mod test {
+        use super::add_two;
+    
+        #[test]
+        fn it_works() {
+            assert_eq!(4, add_two(2));
+        }
+    }
+
+代码有一些变化,首先就是引入了一个使用cfg属性的mod test。 这个模块允许我们集合所有的测试，并且如果需要的话定义辅助函数,
+它不会成为我们crate的一部分。当我们运行这些测试的时候，这个cfg属性表示仅编译我们的测试代码，它可以节省编译时间，并且确保我们的测试代码不会纳入构建之中
     
 
+第二个变化就是。使用了use声明，因为我们在写一个内部模块，我们需要将我们的测试函数引入到当前作用域内，如果你有一个大模块，这样多很烦人。这有一个glob特性的使用方法，像下面这样，改变我们的代码:
+    
+    pub fn add_two(a: i32) -> i32 {
+        a + 2
+    }
+    
+    #[cfg(test)]
+    mod test {
+        use super::*;
+    
+        #[test]
+        fn it_works() {
+            assert_eq!(4, add_two(2));
+        }
+    }
+    
+注意使用use关键字那行，让我们运行测试
 
-
-
-
+    $ cargo test
+        Updating registry `https://github.com/rust-lang/crates.io-index`
+       Compiling adder v0.0.1 (file:///home/you/projects/adder)
+         Running target/adder-91b3e234d4ed382a
+    
+    running 1 test
+    test test::it_works ... ok
+    
+    test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured
+    
+       Doc-tests adder
+    
+    running 0 tests
+    
+    test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured
+   
+当前使用 test module的模式存放你的“单元风格”的测试，仅仅是测试一个小功能可以这么做。但是"集成风格"的测试呢？对于这个。我们有测试目录
 
 
 
