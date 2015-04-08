@@ -221,14 +221,117 @@ shuld_panic测试是脆弱的，，它很难保证一个未知原因导致的失
    
 当前使用 test module的模式存放你的“单元风格”的测试，仅仅是测试一个小功能可以这么做。但是"集成风格"的测试呢？对于这个。我们有测试目录
 
+#the test directory
 
+- - -
+为了写一个集成测试，我们新建立一个tests目录，里面放一个test/lib.rs文件，写上下面的内容:
 
+    extern crate adder;
 
+    #[test]
+    fn it_works() {
+        assert_eq!(4, adder::add_two(2));
+    }
+    
+代码看起来和我们前面看起来一样。但是有些不同,在代码第一行，有extern crate adder 。这时因为测试在tests目录中，不同于crate，需要导入我们的library.这也是为什么tests是写集成测试合适的地方，他们使用library，就像其他用户使用一样。
 
+让我们运行代码:
 
+        $ cargo test
+       Compiling adder v0.0.1 (file:///home/you/projects/adder)
+         Running target/adder-91b3e234d4ed382a
+    
+    running 1 test
+    test test::it_works ... ok
+    
+    test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured
+    
+         Running target/lib-c18e7d3494509e74
 
+    running 1 test
+    test it_works ... ok
+    
+    test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured
+    
+       Doc-tests adder
+    
+    running 0 tests
+    
+    test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured
+    
+现在我们将了3部分了。我们前面的测试，加上新的这个
 
+这就是tests directory， test module在这不需要，因为整个测试都集中在这
 
+让我们最后看看第三部分: Documentation tests。
+
+#Documentation tests
+
+- - -
+没有什么比带例子的文档更好了。没有什么比不能运行的例子更糟了，因为文档写完代码已经改变，Rust支持自动运行文档中的例子。
+
+这有一份详实的src/lib.rs的例子
+
+    //! The `adder` crate provides functions that add numbers to other numbers.
+    //!
+    //! # Examples
+    //!
+    //! ```
+    //! assert_eq!(4, adder::add_two(2));
+    //! ```
+    
+    /// This function adds two to its argument.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use adder::add_two;
+    ///
+    /// assert_eq!(4, add_two(2));
+    /// ```
+    pub fn add_two(a: i32) -> i32 {
+        a + 2
+    }
+    
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+        
+        #[test]
+        fn it_works() {
+            assert_eq!(4, add_two(2));
+        }
+    }
+  
+注意模块的文档使用//! ，函数的文档使用///  Rust的文档支持markdown，所以它支持3个反单引号来标记代码块。上面例子那样，通常包含# Example的部分，紧跟着就是例子
+    
+让我们再次运行这个测试:
+
+    $ cargo test
+       Compiling adder v0.0.1 (file:///home/steve/tmp/adder)
+         Running target/adder-91b3e234d4ed382a
+    
+    running 1 test
+    test test::it_works ... ok
+    
+    test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured
+    
+         Running target/lib-c18e7d3494509e74
+    
+    running 1 test
+    test it_works ... ok
+    
+    test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured
+    
+       Doc-tests adder
+    
+    running 2 tests
+    test add_two_0 ... ok
+    test _0 ... ok
+    
+    test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured
+    
+现在我们已经知道3种测试了，注册这个document test的名字: _0是模块测试的名字，add_two_0是函数测试，如果你添加更多测试他们会自动加1 类似add_two_1
 
 
 
