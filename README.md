@@ -20,7 +20,7 @@
 - - -
 本人对rust官方文档的翻译，如果哪里有您感觉不对的地方请联系我 
 
-QQ 330840301 test add one add
+QQ 330840301 test add one add and two add
 
 Email c3tc3tc3t@126.com
 
